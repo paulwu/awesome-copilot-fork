@@ -1,11 +1,16 @@
 ---
 description: 'Comprehensive technology stack blueprint generator that analyzes codebases to create detailed architectural documentation. Automatically detects technology stacks, programming languages, and implementation patterns across multiple platforms (.NET, Java, JavaScript, React, Python). Generates configurable blueprints with version information, licensing details, usage patterns, coding conventions, and visual diagrams. Provides implementation-ready templates and maintains architectural consistency for guided development.'
 agent: 'agent'
+name: 'Technology-Stack-Blueprint-Generator'
+argument-hint: 'OUTPUT_PATH=path'
+model: 'Claude Opus 4.6 (fast mode) (Preview)'
 ---
 
 # Comprehensive Technology Stack Blueprint Generator
 
 ## Configuration Variables
+${TARGET_PATH=""} <!-- Folder path to analyze (leave empty for current workspace) -->
+${OUTPUT_PATH=""} <!-- Folder path for output file (leave empty for current workspace) -->
 ${PROJECT_TYPE="Auto-detect|.NET|Java|JavaScript|React.js|React Native|Angular|Python|Other"} <!-- Primary technology -->
 ${DEPTH_LEVEL="Basic|Standard|Comprehensive|Implementation-Ready"} <!-- Analysis depth -->
 ${INCLUDE_VERSIONS=true|false} <!-- Include version information -->
@@ -18,7 +23,7 @@ ${CATEGORIZATION="Technology Type|Layer|Purpose"} <!-- Organization method -->
 
 ## Generated Prompt
 
-"Analyze the codebase and generate a ${DEPTH_LEVEL} technology stack blueprint that thoroughly documents technologies and implementation patterns to facilitate consistent code generation. Use the following approach:
+"Analyze ${TARGET_PATH ? "the codebase at path '" + TARGET_PATH + "'" : "the current workspace codebase"} and generate a ${DEPTH_LEVEL} technology stack blueprint that thoroughly documents technologies and implementation patterns to facilitate consistent code generation. Use the following approach:
 
 ### 1. Technology Identification Phase
 - ${PROJECT_TYPE == "Auto-detect" ? "Scan the codebase for project files, configuration files, and dependencies to determine all technology stacks in use" : "Focus on ${PROJECT_TYPE} technologies"}
@@ -77,7 +82,7 @@ ${PROJECT_TYPE == "Python" || PROJECT_TYPE == "Auto-detect" ? "#### Python Analy
 - API design patterns" : ""}
 
 ### 3. Implementation Patterns & Conventions
-${INCLUDE_CONVENTIONS ? 
+${INCLUDE_CONVENTIONS ?
 "Document coding conventions and patterns for each technology area:
 
 #### Naming Conventions
@@ -102,7 +107,7 @@ ${INCLUDE_CONVENTIONS ?
 - Testing patterns" : ""}
 
 ### 4. Usage Examples
-${INCLUDE_USAGE_PATTERNS ? 
+${INCLUDE_USAGE_PATTERNS ?
 "Extract representative code examples showing standard implementation patterns:
 
 #### API Implementation Examples
@@ -131,7 +136,7 @@ ${INCLUDE_USAGE_PATTERNS ?
 - API integration pattern" : ""}
 
 ### 5. Technology Stack Map
-${DEPTH_LEVEL == "Comprehensive" || DEPTH_LEVEL == "Implementation-Ready" ? 
+${DEPTH_LEVEL == "Comprehensive" || DEPTH_LEVEL == "Implementation-Ready" ?
 "Create a comprehensive technology map including:
 
 #### Core Framework Usage
@@ -160,60 +165,60 @@ ${DEPTH_LEVEL == "Comprehensive" || DEPTH_LEVEL == "Implementation-Ready" ?
 
 ### 6. Technology-Specific Implementation Details
 
-${PROJECT_TYPE == ".NET" || PROJECT_TYPE == "Auto-detect" ? 
+${PROJECT_TYPE == ".NET" || PROJECT_TYPE == "Auto-detect" ?
 "#### .NET Implementation Details (if detected)
 - **Dependency Injection Pattern**:
   - Service registration approach (Scoped/Singleton/Transient patterns)
   - Configuration binding patterns
-  
+
 - **Controller Patterns**:
   - Base controller usage
   - Action result types and patterns
   - Route attribute conventions
   - Filter usage (authorization, validation, etc.)
-  
+
 - **Data Access Patterns**:
   - ORM configuration and usage
   - Entity configuration approach
   - Relationship definitions
   - Query patterns and optimization approaches
-  
+
 - **API Design Patterns** (if used):
   - Endpoint organization
   - Parameter binding approaches
   - Response type handling
-  
+
 - **Language Features Used**:
   - Detect specific language features from code
   - Identify common patterns and idioms
   - Note any specific version-dependent features" : ""}
 
-${PROJECT_TYPE == "React.js" || PROJECT_TYPE == "Auto-detect" ? 
+${PROJECT_TYPE == "React.js" || PROJECT_TYPE == "Auto-detect" ?
 "#### React Implementation Details (if detected)
 - **Component Structure**:
   - Function vs class components
   - Props interface definitions
   - Component composition patterns
-  
+
 - **Hook Usage Patterns**:
   - Custom hook implementation style
   - useState patterns
   - useEffect cleanup approaches
   - Context usage patterns
-  
+
 - **State Management**:
   - Local vs global state decisions
   - State management library patterns
   - Store configuration
   - Selector patterns
-  
+
 - **Styling Approach**:
   - CSS methodology (CSS modules, styled-components, etc.)
   - Theme implementation
   - Responsive design patterns" : ""}
 
 ### 7. Blueprint for New Code Implementation
-${DEPTH_LEVEL == "Implementation-Ready" ? 
+${DEPTH_LEVEL == "Implementation-Ready" ?
 "Based on the analysis, provide a detailed blueprint for implementing new features:
 
 - **File/Class Templates**: Standard structure for common component types
@@ -223,7 +228,7 @@ ${DEPTH_LEVEL == "Implementation-Ready" ?
 - **Testing Requirements**: Standard test patterns for different component types
 - **Documentation Requirements**: Standard doc patterns for new features" : ""}
 
-${INCLUDE_DIAGRAMS ? 
+${INCLUDE_DIAGRAMS ?
 "### 8. Technology Relationship Diagrams
 - **Stack Diagram**: Visual representation of the complete technology stack
 - **Dependency Flow**: How different technologies interact
@@ -238,5 +243,5 @@ ${INCLUDE_DIAGRAMS ?
 
 Format the output as ${OUTPUT_FORMAT} and categorize technologies by ${CATEGORIZATION}.
 
-Save the output as 'Technology_Stack_Blueprint.${OUTPUT_FORMAT == "Markdown" ? "md" : OUTPUT_FORMAT.toLowerCase()}'
+Save the output as '${OUTPUT_PATH ? OUTPUT_PATH + "/" : ""}Technology_Stack_Blueprint.${OUTPUT_FORMAT == "Markdown" ? "md" : OUTPUT_FORMAT.toLowerCase()}'
 "
